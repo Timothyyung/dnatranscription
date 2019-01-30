@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import re
-
+import sys
 
 """ This function creates the dictionary that has references to what sequence of neucleotides become what amino acids 
 We store the references in a text file and use it to create the dictionary"""
@@ -49,32 +49,35 @@ def translation(seq, adict):
         aacid = seq[i:i+3]
         framenum = i%3
         frames[framenum] = frames[framenum] + adict[aacid] + " "
-
-        aacid = rseq(aacid)
-        frames[(framenum) + 3] = adict[aacid] + " " + frames[(framenum) +3]
-
     
+    
+    seq = rseq(seq)
+
+    for i in range(0, len(seq)-2):
+        aacid = seq[i:i+3]
+        framenum = i%3 + 3
+        frames[framenum] = frames[framenum] + adict[aacid] + " "
+     
     return frames
 
 def printframes(frames):
-    order = [0,1,2,5,4,3]
-    i = j = 1
-    for num in order:
-        if num <= 2: 
+    j = 1
+    for i in range(0,len(frames)):
+        if i <= 2: 
             print "\n\n5'3' Frame " + str(i)
             i += 1
         else:
             print "\n\n3'5' Frame " + str(j)
             j += 1
 
-        print  frames[num]
+        print  frames[i]
 
 
 if __name__ == "__main__":
-
+    
     aminoacids = aminodict()
 
-    seq = readsequence('./seq.txt')
+    seq = readsequence(sys.argv[1])
 
     printframes(translation(seq,aminoacids))
 
