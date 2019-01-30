@@ -69,15 +69,36 @@ def printframes(frames):
         else:
             print "\n\n3'5' Frame " + str(j)
             j += 1
+        
+        print frames[i]
+        print '\n\nLongest open frame: '
+        print findopenframes(frames[i])
+        print '__________________  '
 
-        print  frames[i]
+def findopenframes(frame):
+    openframe = ''
+    tframe =''
+    framestart = False
+    protiens = frame.split(' ')
+    for char in protiens:
+        if ( char == 'Met' ):
+            framestart = True
+        elif ( char == 'Stop'):
+            framestart = False
+            if( len(tframe) > len(openframe)):
+                openframe = tframe + 'Stop'
+            tframe = ''
 
+        if(framestart == True):
+            tframe = tframe + char + ' ' 
+
+    return openframe
 
 if __name__ == "__main__":
     
     aminoacids = aminodict()
 
     seq = readsequence(sys.argv[1])
-
+    frames = translation(seq,aminoacids)
     printframes(translation(seq,aminoacids))
-
+     
